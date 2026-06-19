@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MedLab — Laboratory Information System</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+</head>
+<body>
+  <div class="app">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <div class="brand"><span class="accent">MedLab</span> · Laboratory Information System</div>
+      <div class="badges">
+        <span class="pill pill-green">● System Online</span>
+        <span class="pill pill-blue" id="clk"></span>
+        <span class="pill pill-amber">Lab ID: BHW-2026</span>
+      </div>
+    </div>
+
+    <!-- NAV -->
+    <div class="nav">
+      <button class="nb on" onclick="sw('overview',this)">Overview</button>
+      <button class="nb" onclick="sw('patients',this)">Patients</button>
+      <button class="nb" onclick="sw('collection',this)">Sample Collection</button>
+      <button class="nb" onclick="sw('results',this)">Test Results</button>
+      <button class="nb" onclick="sw('imaging',this)">Imaging (X-Ray / MRI / CT)</button>
+      <button class="nb" onclick="sw('reports',this)">Reports</button>
+      <button class="nb" onclick="sw('alerts',this)">Alerts</button>
+    </div>
+
+    <!-- ==================== OVERVIEW ==================== -->
+    <div class="sec on" id="s-overview">
+      <div class="g4">
+        <div class="met"><div class="lbl">Today's Samples</div><div class="val">148</div><div class="sub up">+12 vs yesterday</div></div>
+        <div class="met"><div class="lbl">Pending Results</div><div class="val">37</div><div class="sub warn">14 urgent</div></div>
+        <div class="met"><div class="lbl">Critical Alerts</div><div class="val">5</div><div class="sub danger">Requires review</div></div>
+        <div class="met"><div class="lbl">Imaging Queue</div><div class="val">22</div><div class="sub info">8 X-Ray · 9 MRI · 5 CT</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ctitle">Tests by Department (today)</div>
+          <div class="chart-wrap"><canvas id="deptChart" role="img" aria-label="Bar chart of tests by department today">Tests per department bar chart.</canvas></div>
+        </div>
+        <div class="card">
+          <div class="ctitle">Sample Status Distribution</div>
+          <div class="chart-wrap"><canvas id="statusChart" role="img" aria-label="Doughnut chart of sample statuses">Sample status doughnut chart.</canvas></div>
+        </div>
+      </div>
+      <div class="g3">
+        <div class="card">
+          <div class="ctitle">Turnaround Time (avg hrs)</div>
+          <div class="pbar-wrap"><div class="pbar-top"><span>Haematology</span><span>1.8h</span></div><div class="pbar"><div class="pf pf-b" style="width:36%"></div></div></div>
+          <div class="pbar-wrap"><div class="pbar-top"><span>Biochemistry</span><span>2.4h</span></div><div class="pbar"><div class="pf pf-g" style="width:48%"></div></div></div>
+          <div class="pbar-wrap"><div class="pbar-top"><span>Microbiology</span><span>18h</span></div><div class="pbar"><div class="pf pf-a" style="width:90%"></div></div></div>
+          <div class="pbar-wrap"><div class="pbar-top"><span>Serology</span><span>3.2h</span></div><div class="pbar"><div class="pf pf-p" style="width:64%"></div></div></div>
+          <div class="pbar-wrap"><div class="pbar-top"><span>Histopathology</span><span>48h</span></div><div class="pbar"><div class="pf pf-r" style="width:100%"></div></div></div>
+        </div>
+        <div class="card">
+          <div class="ctitle">Weekly Sample Trend</div>
+          <div class="chart-wrap-sm"><canvas id="trendChart" role="img" aria-label="Line chart of weekly sample collection trend">Weekly trend chart.</canvas></div>
+        </div>
+        <div class="card">
+          <div class="ctitle">Equipment Status</div>
+          <div class="ref-row"><span class="dot dot-g"></span><div class="ref-name">Haematology Analyser</div><span class="tag t-norm">Online</span></div>
+          <div class="ref-row"><span class="dot dot-g"></span><div class="ref-name">Biochem Autoanalyser</div><span class="tag t-norm">Online</span></div>
+          <div class="ref-row"><span class="dot dot-a"></span><div class="ref-name">MRI Scanner 1.5T</div><span class="tag t-low">Maintenance</span></div>
+          <div class="ref-row"><span class="dot dot-g"></span><div class="ref-name">CT Scanner 64-slice</div><span class="tag t-norm">Online</span></div>
+          <div class="ref-row"><span class="dot dot-r"></span><div class="ref-name">PCR Thermal Cycler</div><span class="tag t-high">Offline</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== PATIENTS ==================== -->
+    <div class="sec" id="s-patients">
+      <div class="pt-header">
+        <div class="pt-avatar">AF</div>
+        <div class="pt-info">
+          <div class="name">Ahmed Farooq — MRN: 2026-04871</div>
+          <div class="meta">Male · 38 yrs · B+ · Dr. Kamran Iqbal · Ward 4B · Admitted: 18 Apr 2026</div>
+        </div>
+        <div class="pt-actions">
+          <button class="act-btn">Print</button>
+          <button class="act-btn act-btn-pri">New Order</button>
+        </div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ctitle">Active Test Orders</div>
+          <table class="tbl">
+            <thead><tr><th>Test</th><th>Dept</th><th>Ordered</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>CBC</td><td>Haematology</td><td>08:30</td><td><span class="tag t-norm">Resulted</span></td></tr>
+              <tr><td>LFTs</td><td>Biochemistry</td><td>08:30</td><td><span class="tag t-norm">Resulted</span></td></tr>
+              <tr><td>KFTs</td><td>Biochemistry</td><td>09:15</td><td><span class="tag t-pend">Processing</span></td></tr>
+              <tr><td>Chest X-Ray</td><td>Radiology</td><td>10:00</td><td><span class="tag t-norm">Resulted</span></td></tr>
+              <tr><td>Blood Culture</td><td>Microbiology</td><td>10:00</td><td><span class="tag t-pend">Incubating</span></td></tr>
+              <tr><td>MRI Brain</td><td>Radiology</td><td>11:30</td><td><span class="tag t-low">Queued</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="ctitle">Patient Summary</div>
+          <div class="rs-row"><span class="rs-key">Chief Complaint</span><span class="rs-val">Fever, headache 3 days</span></div>
+          <div class="rs-row"><span class="rs-key">Diagnosis</span><span class="rs-val">Viral encephalitis (provisional)</span></div>
+          <div class="rs-row"><span class="rs-key">Allergies</span><span class="rs-val">Penicillin</span></div>
+          <div class="rs-row"><span class="rs-key">BP</span><span class="rs-val">132/88 mmHg</span></div>
+          <div class="rs-row"><span class="rs-key">Temperature</span><span class="rs-val">38.9°C</span></div>
+          <div class="rs-row"><span class="rs-key">Pulse</span><span class="rs-val">102 bpm</span></div>
+          <div class="rs-row"><span class="rs-key">SpO2</span><span class="rs-val">97%</span></div>
+          <div class="rs-row"><span class="rs-key">Attending</span><span class="rs-val">Dr. Kamran Iqbal</span></div>
+          <div class="rs-row"><span class="rs-key">Insurance</span><span class="rs-val">State Employees</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ctitle">Recent Patients</div>
+        <table class="tbl">
+          <thead><tr><th>MRN</th><th>Name</th><th>Age</th><th>Referred By</th><th>Sample Type</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>2026-04871</td><td>Ahmed Farooq</td><td>38</td><td>Dr. K. Iqbal</td><td>Blood, Urine</td><td>22 Apr</td><td><span class="tag t-pend">In-Progress</span></td></tr>
+            <tr><td>2026-04870</td><td>Sana Malik</td><td>29</td><td>Dr. Ayesha</td><td>Blood</td><td>22 Apr</td><td><span class="tag t-norm">Complete</span></td></tr>
+            <tr><td>2026-04869</td><td>Zubair Khan</td><td>55</td><td>Dr. Raheel</td><td>Blood, CSF</td><td>22 Apr</td><td><span class="tag t-crit">Critical</span></td></tr>
+            <tr><td>2026-04868</td><td>Hina Bashir</td><td>42</td><td>Dr. Noman</td><td>Biopsy</td><td>21 Apr</td><td><span class="tag t-low">Pending</span></td></tr>
+            <tr><td>2026-04867</td><td>Tariq Mehmood</td><td>67</td><td>Dr. Sajid</td><td>Blood, Urine</td><td>21 Apr</td><td><span class="tag t-norm">Complete</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ==================== SAMPLE COLLECTION ==================== -->
+    <div class="sec" id="s-collection">
+      <div class="g4">
+        <div class="met"><div class="lbl">Collected Today</div><div class="val">148</div></div>
+        <div class="met"><div class="lbl">Pending Collection</div><div class="val">23</div></div>
+        <div class="met"><div class="lbl">Rejected Samples</div><div class="val">4</div><div class="sub danger">Review needed</div></div>
+        <div class="met"><div class="lbl">Barcode Printed</div><div class="val">152</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ctitle">Collection Workflow — Patient: Ahmed Farooq</div>
+          <div class="collect-step">
+            <div class="step-num step-done">1</div>
+            <div class="step-info"><div class="step-title">Order received &amp; verified</div><div class="step-sub">CBC, LFTs, KFTs, Blood Culture · MRN 2026-04871</div></div>
+            <div class="step-time">08:15</div>
+          </div>
+          <div class="collect-step">
+            <div class="step-num step-done">2</div>
+            <div class="step-info"><div class="step-title">Barcode labels generated</div><div class="step-sub">4 labels printed — EDTA, SST, Fluoride, Culture vials</div></div>
+            <div class="step-time">08:22</div>
+          </div>
+          <div class="collect-step">
+            <div class="step-num step-done">3</div>
+            <div class="step-info"><div class="step-title">Patient identification confirmed</div><div class="step-sub">Wristband scanned · Verbal confirmation · 2-point ID</div></div>
+            <div class="step-time">08:28</div>
+          </div>
+          <div class="collect-step">
+            <div class="step-num step-done">4</div>
+            <div class="step-info"><div class="step-title">Venepuncture performed</div><div class="step-sub">Right antecubital fossa · 21G needle · 4 vials collected</div></div>
+            <div class="step-time">08:30</div>
+          </div>
+          <div class="collect-step">
+            <div class="step-num step-done">5</div>
+            <div class="step-info"><div class="step-title">Samples labelled &amp; transported</div><div class="step-sub">Logged into LIS · Dispatched via pneumatic tube</div></div>
+            <div class="step-time">08:35</div>
+          </div>
+          <div class="collect-step">
+            <div class="step-num step-act">6</div>
+            <div class="step-info"><div class="step-title">Sample received in laboratory</div><div class="step-sub">Centrifugation in progress · Aliquoting pending</div></div>
+            <div class="step-time">08:42 ●</div>
+          </div>
+          <div class="collect-step">
+            <div class="step-num step-pend">7</div>
+            <div class="step-info"><div class="step-title">Analysis on analyser</div><div class="step-sub">Haematology + Biochemistry batch</div></div>
+            <div class="step-time">Est. 09:00</div>
+          </div>
+          <div class="collect-step">
+            <div class="step-num step-pend">8</div>
+            <div class="step-info"><div class="step-title">Result verification &amp; authorisation</div><div class="step-sub">Awaiting senior scientist review</div></div>
+            <div class="step-time">Est. 09:30</div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:12px;">
+            <div class="ctitle">Sample Types — Today</div>
+            <div class="ref-row"><span class="dot" style="background:#e24b4a"></span><div class="ref-name">EDTA Blood (CBC)</div><span class="fw">52</span></div>
+            <div class="ref-row"><span class="dot" style="background:#ba7517"></span><div class="ref-name">SST Serum (Biochem)</div><span class="fw">44</span></div>
+            <div class="ref-row"><span class="dot dot-b"></span><div class="ref-name">Urine (Routine / C&S)</div><span class="fw">28</span></div>
+            <div class="ref-row"><span class="dot dot-g"></span><div class="ref-name">Swab / Culture</div><span class="fw">14</span></div>
+            <div class="ref-row"><span class="dot" style="background:#9c27b0"></span><div class="ref-name">CSF</div><span class="fw">3</span></div>
+            <div class="ref-row"><span class="dot dot-grey"></span><div class="ref-name">Biopsy / Histology</div><span class="fw">7</span></div>
+          </div>
+          <div class="card">
+            <div class="ctitle">Rejection Reasons</div>
+            <div class="ref-row"><div class="ref-name">Haemolysed sample</div><span class="tag t-high">2</span></div>
+            <div class="ref-row"><div class="ref-name">Incorrect tube / label</div><span class="tag t-high">1</span></div>
+            <div class="ref-row"><div class="ref-name">Insufficient volume</div><span class="tag t-low">1</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TEST RESULTS ==================== -->
+    <div class="sec" id="s-results">
+      <div class="g2b">
+        <div>
+          <div class="card" style="margin-bottom:12px;">
+            <div class="ctitle">Complete Blood Count — Ahmed Farooq · 22 Apr 2026</div>
+            <div class="ref-row"><div class="ref-name">Haemoglobin (Hb)</div><div class="ref-val danger">10.8 g/dL</div><div class="ref-range">13.5–17.5</div><span class="tag t-low">Low</span></div>
+            <div class="ref-row"><div class="ref-name">WBC Count</div><div class="ref-val danger">14.2 ×10³/µL</div><div class="ref-range">4.0–11.0</div><span class="tag t-high">High</span></div>
+            <div class="ref-row"><div class="ref-name">Platelets</div><div class="ref-val">210 ×10³/µL</div><div class="ref-range">150–400</div><span class="tag t-norm">Normal</span></div>
+            <div class="ref-row"><div class="ref-name">Neutrophils</div><div class="ref-val danger">82%</div><div class="ref-range">40–75%</div><span class="tag t-high">High</span></div>
+            <div class="ref-row"><div class="ref-name">Lymphocytes</div><div class="ref-val warn">13%</div><div class="ref-range">20–45%</div><span class="tag t-low">Low</span></div>
+            <div class="ref-row"><div class="ref-name">MCV</div><div class="ref-val">82 fL</div><div class="ref-range">80–100</div><span class="tag t-norm">Normal</span></div>
+            <div class="ref-row"><div class="ref-name">MCH</div><div class="ref-val">27 pg</div><div class="ref-range">27–33</div><span class="tag t-norm">Normal</span></div>
+            <div class="ref-row"><div class="ref-name">ESR</div><div class="ref-val danger">68 mm/hr</div><div class="ref-range">0–20</div><span class="tag t-crit">Critical</span></div>
+          </div>
+          <div class="card">
+            <div class="ctitle">Liver Function Tests</div>
+            <div class="ref-row"><div class="ref-name">ALT (SGPT)</div><div class="ref-val">28 U/L</div><div class="ref-range">7–40</div><span class="tag t-norm">Normal</span></div>
+            <div class="ref-row"><div class="ref-name">AST (SGOT)</div><div class="ref-val">32 U/L</div><div class="ref-range">10–40</div><span class="tag t-norm">Normal</span></div>
+            <div class="ref-row"><div class="ref-name">ALP</div><div class="ref-val">88 U/L</div><div class="ref-range">44–147</div><span class="tag t-norm">Normal</span></div>
+            <div class="ref-row"><div class="ref-name">Total Bilirubin</div><div class="ref-val">1.1 mg/dL</div><div class="ref-range">0.1–1.2</div><span class="tag t-norm">Normal</span></div>
+            <div class="ref-row"><div class="ref-name">Total Protein</div><div class="ref-val">7.2 g/dL</div><div class="ref-range">6.3–8.2</div><span class="tag t-norm">Normal</span></div>
+            <div class="ref-row"><div class="ref-name">Albumin</div><div class="ref-val warn">3.1 g/dL</div><div class="ref-range">3.5–5.5</div><span class="tag t-low">Low</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:12px;">
+            <div class="ctitle">WBC Count Trend</div>
+            <div class="chart-wrap-sm"><canvas id="wbcChart" role="img" aria-label="Line chart of WBC count trend">WBC trend.</canvas></div>
+          </div>
+          <div class="card" style="margin-bottom:12px;">
+            <div class="ctitle">Urine Routine</div>
+            <div class="rs-row"><span class="rs-key">Colour</span><span class="rs-val">Pale yellow</span></div>
+            <div class="rs-row"><span class="rs-key">Clarity</span><span class="rs-val">Turbid</span></div>
+            <div class="rs-row"><span class="rs-key">pH</span><span class="rs-val">6.5</span></div>
+            <div class="rs-row"><span class="rs-key">Protein</span><span class="rs-val danger">+2</span></div>
+            <div class="rs-row"><span class="rs-key">Glucose</span><span class="rs-val">Negative</span></div>
+            <div class="rs-row"><span class="rs-key">RBCs</span><span class="rs-val danger">8–10/HPF</span></div>
+            <div class="rs-row"><span class="rs-key">Pus Cells</span><span class="rs-val danger">20–25/HPF</span></div>
+            <div class="rs-row"><span class="rs-key">Bacteria</span><span class="rs-val danger">Seen</span></div>
+          </div>
+          <div class="card">
+            <div class="ctitle">Blood Culture</div>
+            <div class="rs-row"><span class="rs-key">Status</span><span class="rs-val warn">Incubating (32h)</span></div>
+            <div class="rs-row"><span class="rs-key">Flagged</span><span class="rs-val">Not yet</span></div>
+            <div class="rs-row"><span class="rs-key">Expected</span><span class="rs-val">24 Apr 2026</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== IMAGING ==================== -->
+    <div class="sec" id="s-imaging">
+      <div class="g4">
+        <div class="met"><div class="lbl">X-Ray Today</div><div class="val">31</div></div>
+        <div class="met"><div class="lbl">MRI Scans</div><div class="val">12</div></div>
+        <div class="met"><div class="lbl">CT Scans</div><div class="val">9</div></div>
+        <div class="met"><div class="lbl">Ultrasound</div><div class="val">18</div></div>
+      </div>
+      <div class="card" style="margin-bottom:12px;">
+        <div class="ctitle">Imaging Viewer — Select Study</div>
+        <div class="img-btns">
+          <button class="act-btn img-sel on" onclick="setImg('xray',this)">Chest X-Ray</button>
+          <button class="act-btn img-sel" onclick="setImg('mri',this)">MRI Brain</button>
+          <button class="act-btn img-sel" onclick="setImg('ct',this)">CT Abdomen</button>
+          <button class="act-btn img-sel" onclick="setImg('eco',this)">Echo (2D)</button>
+          <button class="act-btn img-sel" onclick="setImg('bone',this)">Bone Scan</button>
+          <button class="act-btn img-sel" onclick="setImg('us',this)">Ultrasound Abd</button>
+        </div>
+        <canvas id="imgCanvas" width="900" height="220" style="width:100%;border-radius:8px;border:1px solid #333;display:block;"></canvas>
+        <div id="imgInfo" class="img-info"></div>
+      </div>
+      <div class="card">
+        <div class="ctitle">Imaging Queue</div>
+        <table class="tbl">
+          <thead><tr><th>MRN</th><th>Patient</th><th>Study</th><th>Modality</th><th>Priority</th><th>Time</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>2026-04871</td><td>Ahmed Farooq</td><td>MRI Brain</td><td>MRI 1.5T</td><td><span class="tag t-crit">Urgent</span></td><td>11:30</td><td><span class="tag t-low">Queued</span></td></tr>
+            <tr><td>2026-04865</td><td>Nadia Pervez</td><td>CT Chest</td><td>CT 64-sl</td><td><span class="tag t-high">High</span></td><td>10:45</td><td><span class="tag t-pend">In scanner</span></td></tr>
+            <tr><td>2026-04860</td><td>Omar Bhatti</td><td>X-Ray Lumbar</td><td>X-Ray DR</td><td><span class="tag t-norm">Routine</span></td><td>09:30</td><td><span class="tag t-norm">Reported</span></td></tr>
+            <tr><td>2026-04858</td><td>Fareeha Yousaf</td><td>USG Abdomen</td><td>Ultrasound</td><td><span class="tag t-norm">Routine</span></td><td>09:00</td><td><span class="tag t-norm">Reported</span></td></tr>
+            <tr><td>2026-04855</td><td>Bilal Siddiqui</td><td>Echo 2D</td><td>Echo</td><td><span class="tag t-high">High</span></td><td>08:15</td><td><span class="tag t-norm">Reported</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ==================== REPORTS ==================== -->
+    <div class="sec" id="s-reports">
+      <div class="g3">
+        <div class="met"><div class="lbl">Reports Generated</div><div class="val">112</div></div>
+        <div class="met"><div class="lbl">Awaiting Authorisation</div><div class="val">18</div></div>
+        <div class="met"><div class="lbl">Dispatched to Clinician</div><div class="val">94</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ctitle">Lab Report — Ahmed Farooq · MRN 2026-04871</div>
+          <div class="report-section">
+            <div class="rs-title">Patient &amp; Specimen Details</div>
+            <div class="rs-row"><span class="rs-key">Patient</span><span class="rs-val">Ahmed Farooq · Male · 38 yrs</span></div>
+            <div class="rs-row"><span class="rs-key">Specimen</span><span class="rs-val">Venous Blood (EDTA + SST) + Urine MSU</span></div>
+            <div class="rs-row"><span class="rs-key">Collected</span><span class="rs-val">22 Apr 2026 · 08:30</span></div>
+            <div class="rs-row"><span class="rs-key">Received</span><span class="rs-val">22 Apr 2026 · 08:42</span></div>
+            <div class="rs-row"><span class="rs-key">Reported</span><span class="rs-val">22 Apr 2026 · 09:18</span></div>
+            <div class="rs-row"><span class="rs-key">Ref. Doctor</span><span class="rs-val">Dr. Kamran Iqbal · Neurology</span></div>
+          </div>
+          <div class="report-section">
+            <div class="rs-title">Critical Values Flagged</div>
+            <div class="alert-row alert-crit"><span class="dot dot-r"></span><span>ESR 68 mm/hr — significantly elevated (Normal: 0–20)</span></div>
+            <div class="alert-row alert-crit"><span class="dot dot-r"></span><span>WBC 14.2 ×10³/µL — leukocytosis present</span></div>
+            <div class="alert-row alert-warn"><span class="dot dot-a"></span><span>Hb 10.8 g/dL — mild anaemia</span></div>
+            <div class="alert-row alert-warn"><span class="dot dot-a"></span><span>Albumin 3.1 g/dL — hypoalbuminaemia</span></div>
+          </div>
+          <div class="report-section">
+            <div class="rs-title">Pathologist Comment</div>
+            <p class="comment-text">Findings are consistent with an acute infective/inflammatory process. Elevated ESR and neutrophilia suggest bacterial aetiology. Recommend correlation with clinical findings and blood culture result (pending). Repeat CBC and CRP advised in 48 hours.</p>
+          </div>
+          <div class="report-actions">
+            <button class="act-btn act-btn-pri">Authorise Report</button>
+            <button class="act-btn">Print PDF</button>
+            <button class="act-btn">Send to Clinician</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ctitle">Monthly Report Summary</div>
+          <div class="chart-wrap"><canvas id="monthChart" role="img" aria-label="Bar chart of monthly test volumes">Monthly volumes.</canvas></div>
+          <div style="margin-top:14px;">
+            <div class="ctitle">Top Tests This Month</div>
+            <div class="ref-row"><div class="ref-name">CBC</div><span class="fw">1,842</span></div>
+            <div class="ref-row"><div class="ref-name">LFTs</div><span class="fw">1,204</span></div>
+            <div class="ref-row"><div class="ref-name">HbA1c</div><span class="fw">987</span></div>
+            <div class="ref-row"><div class="ref-name">Urine R/E</div><span class="fw">876</span></div>
+            <div class="ref-row"><div class="ref-name">Lipid Profile</div><span class="fw">743</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== ALERTS ==================== -->
+    <div class="sec" id="s-alerts">
+      <div class="g4">
+        <div class="met"><div class="lbl">Critical</div><div class="val danger">5</div></div>
+        <div class="met"><div class="lbl">Warnings</div><div class="val warn">12</div></div>
+        <div class="met"><div class="lbl">Info</div><div class="val info">8</div></div>
+        <div class="met"><div class="lbl">Resolved Today</div><div class="val up">31</div></div>
+      </div>
+      <div class="card">
+        <div class="ctitle">Active Alerts</div>
+        <div class="alert-row alert-crit"><span class="dot dot-r"></span><div class="alert-body"><div class="alert-title">CRITICAL: CSF Glucose — Zubair Khan (MRN 2026-04869)</div><div class="alert-sub">CSF Glucose 1.8 mmol/L · Normal: 2.5–4.5 · Possible bacterial meningitis · Notify neurologist immediately</div></div><span class="alert-time">09:04</span></div>
+        <div class="alert-row alert-crit"><span class="dot dot-r"></span><div class="alert-body"><div class="alert-title">CRITICAL: Potassium 6.8 mEq/L — Tariq Mehmood (MRN 2026-04867)</div><div class="alert-sub">Severe hyperkalaemia · Cardiac risk · Repeat + ECG advised urgently</div></div><span class="alert-time">08:51</span></div>
+        <div class="alert-row alert-crit"><span class="dot dot-r"></span><div class="alert-body"><div class="alert-title">CRITICAL: Troponin I 4.8 ng/mL — Bilal Siddiqui (MRN 2026-04855)</div><div class="alert-sub">Highly elevated · Acute MI cannot be excluded · Cardiology review required</div></div><span class="alert-time">08:20</span></div>
+        <div class="alert-row alert-warn"><span class="dot dot-a"></span><div class="alert-body"><div class="alert-title">Equipment: PCR Thermal Cycler offline</div><div class="alert-sub">COVID PCR tests affected · Estimated repair: 4 hrs · 6 samples pending redirection</div></div><span class="alert-time">07:30</span></div>
+        <div class="alert-row alert-warn"><span class="dot dot-a"></span><div class="alert-body"><div class="alert-title">MRI Scanner in maintenance — 3 scans rescheduled</div><div class="alert-sub">1.5T MRI under planned maintenance · Patients notified · Estimated back online: 14:00</div></div><span class="alert-time">07:00</span></div>
+        <div class="alert-row alert-warn"><span class="dot dot-a"></span><div class="alert-body"><div class="alert-title">Sample rejected: Haemolysed EDTA — Hina Bashir (MRN 2026-04868)</div><div class="alert-sub">Repeat sample requested · Inform ward nurse</div></div><span class="alert-time">09:10</span></div>
+        <div class="alert-row alert-info"><span class="dot dot-b"></span><div class="alert-body"><div class="alert-title">Blood Culture — Ahmed Farooq flagged positive (prelim)</div><div class="alert-sub">Gram-positive cocci on preliminary smear · Sensitivity pending 24h</div></div><span class="alert-time">10:15</span></div>
+        <div class="alert-row alert-ok"><span class="dot dot-g"></span><div class="alert-body"><div class="alert-title">Reagent restocked: HbA1c kit (200 tests)</div><div class="alert-sub">Automated inventory alert resolved</div></div><span class="alert-time">08:05</span></div>
+      </div>
+    </div>
+
+  </div><!-- end .app -->
+
+  <script src="js/imaging.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
